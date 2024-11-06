@@ -1,9 +1,9 @@
 {
 	"schemaVersion": 1,
-	"id": "testmod",
+	"id": "waypointsmod",
 	"version": "${version}",
-	"name": "Test Mod",
-	"description": "This is an example description! Tell everyone what your mod is about!",
+	"name": "Waypoints Mod",
+	"description": "Creates waypoints on the map.",
 	"authors": [
 		"Poisonvenom"
 	],
@@ -12,17 +12,17 @@
 		"sources": "https://github.com/FabricMC/fabric-example-mod"
 	},
 	"license": "CC0-1.0",
-	"icon": "assets/testmod/icon.png",
+	"icon": "assets/waypointsmod/icon.png",
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"net.poisonvenom.testmod.TestMod"
+			"net.poisonvenom.waypointsmod.WaypointsMod"
 		],
 		"client": [
-			"net.poisonvenom.testmod.TestModClient"
+			"net.poisonvenom.waypointsmod.WaypointsModClient"
 		],
 		"fabric-datagen": [
-			"net.poisonvenom.testmod.TestModDataGenerator"
+			"net.poisonvenom.waypointsmod.WaypointsModDataGenerator"
 		]
 	},
 	"mixins": [
