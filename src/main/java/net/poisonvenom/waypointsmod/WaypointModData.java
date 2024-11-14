@@ -11,4 +11,8 @@ public class WaypointModData {
     public static void addWaypoint(String name, BlockPos position) {
         waypoints.add(new Waypoint(name, position));
     }
+
+    public static boolean removeWaypoint(String name) {
+        return waypoints.removeIf(waypoint -> waypoint.name.equalsIgnoreCase(name));
+    }
 }
