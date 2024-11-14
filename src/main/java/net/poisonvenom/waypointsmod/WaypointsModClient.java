@@ -5,12 +5,9 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
-import net.minecraft.block.BeaconBlock;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.render.*;
-import net.minecraft.client.render.block.entity.BeaconBlockEntityRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
@@ -26,9 +23,7 @@ public class WaypointsModClient implements ClientModInitializer {
 
     private static void renderWaypointsBeam(WorldRenderContext worldRenderContext) {
         MatrixStack mtx = worldRenderContext.matrixStack();
-        MinecraftClient client = MinecraftClient.getInstance();
         Camera cam = worldRenderContext.camera();
-        TextRenderer textRenderer = client.textRenderer;
         Vec3d cameraPos = cam.getPos();
         Tessellator tess = Tessellator.getInstance();
         BufferBuilder buffer = tess.getBuffer();
@@ -53,9 +48,9 @@ public class WaypointsModClient implements ClientModInitializer {
                 float scale = 0.025f; // Adjust this to change text size
                 mtx.scale(-scale, -scale, scale);
 
-                // Render the waypoint name
-                String waypointText = waypoint.name + " (" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
-                int textWidth = textRenderer.getWidth(waypointText) / 2;
+//                // Render the waypoint name
+//                String waypointText = waypoint.name + " (" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
+//                int textWidth = textRenderer.getWidth(waypointText) / 2;
 
                 // Render text with shadow
                 buffer.vertex(mtx.peek().getPositionMatrix(), 20, 20, 5).color(0xFF414141).next();
