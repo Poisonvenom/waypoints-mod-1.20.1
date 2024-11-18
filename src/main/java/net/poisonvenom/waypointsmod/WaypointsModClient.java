@@ -15,13 +15,15 @@ import net.minecraft.util.math.Vec3d;
 public class WaypointsModClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
+        // Register commands
+        WaypointCommand.register();
         // Registering the HUD rendering callback
         HudRenderCallback.EVENT.register(WaypointsModClient::renderWaypoints);
-        // Same but for beams
-        WorldRenderEvents.AFTER_ENTITIES.register(WaypointsModClient::renderWaypointsBeam);
+        // Same but for markers
+        WorldRenderEvents.AFTER_ENTITIES.register(WaypointsModClient::renderWaypointsMarker);
     }
 
-    private static void renderWaypointsBeam(WorldRenderContext worldRenderContext) {
+    private static void renderWaypointsMarker(WorldRenderContext worldRenderContext) {
         MatrixStack mtx = worldRenderContext.matrixStack();
         Camera cam = worldRenderContext.camera();
         Vec3d cameraPos = cam.getPos();
@@ -34,7 +36,7 @@ public class WaypointsModClient implements ClientModInitializer {
             Vec3d waypointPos = new Vec3d(pos.getX() + 0.5, pos.getY() + 1.5, pos.getZ() + 0.5);
 
             // Check if waypoint is within rendering distance
-            if (cameraPos.distanceTo(waypointPos) < 100.0) { // Render only if within 100 blocks
+            if (cameraPos.distanceTo(waypointPos) < 1000.0) { // Render only if within 100 blocks
                 mtx.push();
                 buffer.begin(VertexFormat.DrawMode.TRIANGLE_STRIP, VertexFormats.POSITION_COLOR);
 
@@ -45,18 +47,24 @@ public class WaypointsModClient implements ClientModInitializer {
                 mtx.multiply(cam.getRotation());
 
                 // Scale the text (smaller as it is farther away)
-                float scale = 0.025f; // Adjust this to change text size
+                float scale = 0.1f; // Adjust this to change size
                 mtx.scale(-scale, -scale, scale);
 
 //                // Render the waypoint name
 //                String waypointText = waypoint.name + " (" + pos.getX() + ", " + pos.getY() + ", " + pos.getZ() + ")";
 //                int textWidth = textRenderer.getWidth(waypointText) / 2;
 
+                // colors
+                // purple 0x9900CC
+                // grey 0xFF414141
+                // pink purple 0xFF33CC
+                // white 0xFF000000
+                // orange 0xFF6600
                 // Render text with shadow
-                buffer.vertex(mtx.peek().getPositionMatrix(), 20, 20, 5).color(0xFF414141).next();
+                buffer.vertex(mtx.peek().getPositionMatrix(), 20, 20, 5).color(0xFF6600).next();
                 buffer.vertex(mtx.peek().getPositionMatrix(), 5, 40, 5).color(0xFF000000).next();
                 buffer.vertex(mtx.peek().getPositionMatrix(), 35, 40, 5).color(0xFF000000).next();
-                buffer.vertex(mtx.peek().getPositionMatrix(), 20, 60, 5).color(0xFF414141).next();
+                buffer.vertex(mtx.peek().getPositionMatrix(), 20, 60, 5).color(0xFF6600).next();
 
                 RenderSystem.setShader(GameRenderer::getPositionColorProgram);
                 RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);

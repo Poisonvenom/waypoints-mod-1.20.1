@@ -1,44 +1,41 @@
 package net.poisonvenom.waypointsmod;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
-import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
-import net.minecraft.server.command.CommandManager;
-import net.minecraft.server.command.ServerCommandSource;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandManager;
+import net.fabricmc.fabric.api.client.command.v2.ClientCommandRegistrationCallback;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.BlockPos;
 
-import java.util.function.Supplier;
 
 public class WaypointCommand {
 
     public static void register() {
         // Register setWaypoint command
-        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
-            dispatcher.register(CommandManager.literal("setWaypoint")
-                    .then(CommandManager.argument("name", StringArgumentType.word())
+        ClientCommandRegistrationCallback.EVENT.register((dispatcher, registryAccess) -> {
+            dispatcher.register(ClientCommandManager.literal("setWaypoint")
+                    .then(ClientCommandManager.argument("name", StringArgumentType.word())
                             .executes(context -> {
                                 String name = StringArgumentType.getString(context, "name");
-                                ServerCommandSource source = context.getSource();
-                                BlockPos pos = source.getPlayer().getBlockPos();
+                                BlockPos pos = MinecraftClient.getInstance().player.getBlockPos();
 
                                 WaypointModData.addWaypoint(name, pos);
-                                source.sendFeedback(() -> Text.literal("Waypoint '" + name + "' added at your current location."), false);
+                                context.getSource().sendFeedback((Text.literal("Waypoint '" + name + "' added at your current location.")));
                                 return 1;
                             })
                     ));
 
             // Register removeWaypoint command
-            dispatcher.register(CommandManager.literal("removeWaypoint")
-                    .then(CommandManager.argument("name", StringArgumentType.word())
+            dispatcher.register(ClientCommandManager.literal("removeWaypoint")
+                    .then(ClientCommandManager.argument("name", StringArgumentType.word())
                             .executes(context -> {
                                 String name = StringArgumentType.getString(context, "name");
-                                ServerCommandSource source = context.getSource();
 
                                 boolean removed = WaypointModData.removeWaypoint(name);
                                 if (removed) {
-                                    source.sendFeedback(() -> Text.literal("Waypoint '" + name + "' removed."), false);
+                                    context.getSource().sendFeedback(Text.literal("Waypoint '" + name + "' removed."));
                                 } else {
-                                    source.sendFeedback(() -> Text.literal("Waypoint '" + name + "' not found."), false);
+                                    context.getSource().sendFeedback(Text.literal("Waypoint '" + name + "' not found."));
                                 }
                                 return 1;
                             })
