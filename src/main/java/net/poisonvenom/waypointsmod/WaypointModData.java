@@ -15,8 +15,4 @@ public class WaypointModData {
     public static boolean removeWaypoint(String name) {
         return waypoints.removeIf(waypoint -> waypoint.name.equalsIgnoreCase(name));
     }
-
-    public static List<Waypoint> getWaypoints() {
-        return waypoints;
-    }
 }
